@@ -19,14 +19,18 @@ contract Spirited is ERC721, Ownable {
         priceFeed = AggregatorV3Interface(_priceFeedAddress);
         uint id;
         uint tokenURIOrdinal;
-        for (uint i; i < _initialTokenURIs.length; i++) {
-            idToTokenURIs[id][tokenURIOrdinal] = _initialTokenURIs[i];
+        for (uint i = 1; i <= _initialTokenURIs.length; i++) {
+            idToTokenURIs[id][tokenURIOrdinal] = _initialTokenURIs[i - 1];
             tokenURIOrdinal++;
-            if (i % 11 == 0) {
+            if (i % 12 == 0) {
                 id++;
                 tokenURIOrdinal = 0;
             }
         }
+    }
+
+    function getInitialTokenURIs(uint _id) external view returns (bytes32[12] memory) {
+        return idToTokenURIs[_id];
     }
 
     function mintToken(bytes32 _name) external onlyOwner {
