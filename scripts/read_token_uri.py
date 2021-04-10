@@ -8,7 +8,7 @@ def main():
     spirited_contract = Spirited[len(Spirited) - 1]
     print(f'Reading actual token uri set to token')
 
-    if network.show_active() in ['kovan', 'mainnet']:
+    if network.show_active() in ['kovan', 'rinkeby', 'mainnet']:
         dev = accounts.add(os.getenv(config['wallets']['from_key']))
         print(spirited_contract.tokenURI(0, {'from': dev}))
     else:

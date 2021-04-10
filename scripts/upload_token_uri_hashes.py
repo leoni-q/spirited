@@ -15,7 +15,7 @@ def main():
     token_uri_hashes = get_token_uri_hashes()
     print(f'got tokenURI hashes {token_uri_hashes}')
 
-    if network.show_active() in ['kovan', 'mainnet']:
+    if network.show_active() in ['kovan', 'rinkeby', 'mainnet']:
         dev = accounts.add(os.getenv(config['wallets']['from_key']))
         for i, uri_hash in enumerate(token_uri_hashes):
             print(uri_hash)

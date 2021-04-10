@@ -17,6 +17,8 @@ networks:
   default: development
   kovan:
     btc_usd_price_feed: '0x6135b13325bfC4B00278B4abC5e20bbce2D6580e'
+  rinkeby:
+    btc_usd_price_feed: '0xECe365B379E1dD183B20fc5f022230C044d51404'
   mainnet:
     btc_usd_price_feed: '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c'
 wallets:
