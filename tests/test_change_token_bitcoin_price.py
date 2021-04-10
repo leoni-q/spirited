@@ -11,13 +11,13 @@ def get_testdata():
         return [tuple(row) for row in csv.reader(f)]
 
 
-@pytest.mark.parametrize('btc_price, token_uri', get_testdata())
-def test_change_token_uri_depending_on_btc_price(utils, get_account, btc_price, token_uri):
+@pytest.mark.parametrize('btc_price, token_uri_hash', get_testdata())
+def test_change_token_uri_depending_on_btc_price(utils, get_account, btc_price, token_uri_hash):
     # given
     mock_price_feed = MockV3Aggregator.deploy(18, btc_price, {'from': get_account})
     spirited = Spirited.deploy(mock_price_feed, {'from': get_account})
-    for i, uri in enumerate(utils.get_default_token_uris(7)):
-        spirited.addInitialTokenURI(0, i, uri)
+    for i, uri_hash in enumerate(utils.get_default_token_uri_hashes(7)):
+        spirited.addInitialTokenURIHash(0, i, uri_hash)
     spirited.mintToken(str.encode("token"))
 
     # when
@@ -25,4 +25,4 @@ def test_change_token_uri_depending_on_btc_price(utils, get_account, btc_price, 
 
     # then
     result = spirited.tokenURI(0)
-    assert result == token_uri
+    assert result == utils.ipfs_url + token_uri_hash

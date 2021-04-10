@@ -8,30 +8,32 @@ import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
 contract Spirited is ERC721, Ownable {
     using Strings for string;
 
+    string constant ipfsUrl = "https://ipfs.io/ipfs/";
+
     AggregatorV3Interface private priceFeed;
 
     bytes32[] names;
 
-    mapping(uint => string[7]) idToTokenURIs;
+    mapping(uint => string[7]) idToTokenURIHashes;
     mapping(uint => string) tokenIdToName;
 
     constructor(address _priceFeedAddress) public ERC721("Spirited", "SPR") {
         priceFeed = AggregatorV3Interface(_priceFeedAddress);
     }
 
-    function addInitialTokenURI(uint _tokenId, uint _position, string memory _tokenURI) external onlyOwner {
-        idToTokenURIs[_tokenId][_position] = _tokenURI;
+    function addInitialTokenURIHash(uint _tokenId, uint _position, string memory _tokenURIHash) external onlyOwner {
+        idToTokenURIHashes[_tokenId][_position] = _tokenURIHash;
     }
 
-    function getInitialTokenURIs(uint _tokenId, uint _position) external view returns (string memory) {
-        return idToTokenURIs[_tokenId][_position];
+    function getInitialTokenURIHash(uint _tokenId, uint _position) external view returns (string memory) {
+        return idToTokenURIHashes[_tokenId][_position];
     }
 
     function mintToken(bytes32 _name) external onlyOwner {
         uint256 newId = names.length;
         names.push(_name);
         _safeMint(_msgSender(), newId);
-        _setTokenURI(newId, idToTokenURIs[newId][0]);
+        _setTokenURI(newId, string(abi.encodePacked(ipfsUrl, idToTokenURIHashes[newId][0])));
     }
 
     function changeTokenURIBasedOnBtcPrice(uint _tokenId) external onlyOwner {
@@ -41,11 +43,11 @@ contract Spirited is ERC721, Ownable {
     }
 
     function _setTokenUriByBtcPrice(uint _btcPrice, uint _tokenId) private {
-        uint tokenURIOrdinal = _getTokenURIOrdinal(_btcPrice);
-        _setTokenURI(_tokenId, string(abi.encodePacked(idToTokenURIs[_tokenId][tokenURIOrdinal])));
+        uint tokenURIOrdinal = _getTokenURIHashOrdinal(_btcPrice);
+        _setTokenURI(_tokenId, string(abi.encodePacked(ipfsUrl, idToTokenURIHashes[_tokenId][tokenURIOrdinal])));
     }
 
-    function _getTokenURIOrdinal(uint _btcPrice) private pure returns (uint) {
+    function _getTokenURIHashOrdinal(uint _btcPrice) private pure returns (uint) {
         if (_btcPrice < 50 * 10 ** 11) {
             return 0;
         } else if (_isPriceWithin(_btcPrice, 50, 60)) {

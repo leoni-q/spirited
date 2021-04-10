@@ -6,9 +6,11 @@ from brownie import network, MockV3Aggregator, accounts, config
 
 
 class Utils:
+    ipfs_url = 'https://ipfs.io/ipfs/'
+
     @staticmethod
-    def get_default_token_uris(num: int):
-        return [f'uri{n}' for n in range(num)]
+    def get_default_token_uri_hashes(num: int):
+        return [f'uri_hash{n}' for n in range(num)]
 
 
 @pytest.fixture(scope="module")
@@ -49,6 +51,6 @@ def get_account():
 @pytest.fixture(scope="module")
 def spirited(Spirited, get_btc_usd_price_feed_address, utils, get_account):
     spirited = Spirited.deploy(get_btc_usd_price_feed_address, get_account)
-    for i, uri in enumerate(utils.get_default_token_uris(7)):
+    for i, uri in enumerate(utils.get_default_token_uri_hashes(7)):
         spirited.addInitialTokenURI(0, i, uri)
     return spirited
