@@ -45,8 +45,8 @@ contract Spirited is ERC721, Ownable {
         _setTokenUriByBtcPrice(uint(price), _tokenId);
     }
 
-    function getTokenURI(uint256 tokenId) public view returns (string memory) {
-        return tokenURI(tokenId);
+    function getTokenURI(uint _tokenId) public view returns (string memory) {
+        return tokenURI(_tokenId);
     }
 
     function _setTokenUriByBtcPrice(uint _btcPrice, uint _tokenId) private {
@@ -55,20 +55,37 @@ contract Spirited is ERC721, Ownable {
     }
 
     function _getTokenURIOrdinal(uint _btcPrice) private pure returns (uint) {
-        uint ordinal;
         if (_btcPrice < 50 * 10 ** 11) {
             return 0;
+        } else if (_isPriceWithin(_btcPrice, 50, 55)) {
+            return 1;
+        } else if (_isPriceWithin(_btcPrice, 55, 60)) {
+            return 2;
+        } else if (_isPriceWithin(_btcPrice, 60, 65)) {
+            return 3;
+        } else if (_isPriceWithin(_btcPrice, 65, 70)) {
+            return 4;
+        } else if (_isPriceWithin(_btcPrice, 70, 75)) {
+            return 5;
+        } else if (_isPriceWithin(_btcPrice, 75, 80)) {
+            return 6;
+        } else if (_isPriceWithin(_btcPrice, 80, 85)) {
+            return 7;
+        } else if (_isPriceWithin(_btcPrice, 85, 90)) {
+            return 8;
+        } else if (_isPriceWithin(_btcPrice, 90, 95)) {
+            return 9;
+        } else if (_isPriceWithin(_btcPrice, 95, 100)) {
+            return 10;
         } else if (_btcPrice >= 100 * 10 ** 11) {
             return 11;
         } else {
-            uint firstTwoDigitsOfBtcPrice = _btcPrice / 10 ** 11;
-            uint roundedAndMultiplied = _roundUpToDivisionOfFive(firstTwoDigitsOfBtcPrice) * 2;
-            return roundedAndMultiplied / 10 % 10;
+            return 0;
         }
     }
 
-    function _roundUpToDivisionOfFive(uint _n) private pure returns (uint) {
-        return (_n + 4) / 5 * 5;
+    function _isPriceWithin(uint _btcPrice, uint _from, uint _to) private pure returns (bool) {
+        return _btcPrice >= _from * 10 ** 11 && _btcPrice < _to * 10 ** 11;
     }
 }
 
