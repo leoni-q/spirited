@@ -15,13 +15,14 @@ def get_testdata():
 def test_change_token_uri_depending_on_btc_price(utils, get_account, btc_price, token_uri):
     # given
     mock_price_feed = MockV3Aggregator.deploy(18, btc_price, {'from': get_account})
-    spirited = Spirited.deploy(mock_price_feed, utils.get_token_uris(12), {'from': get_account})
-
+    spirited = Spirited.deploy(mock_price_feed, {'from': get_account})
+    for i, uri in enumerate(utils.get_default_token_uris(7)):
+        spirited.addInitialTokenURI(0, i, uri)
     spirited.mintToken(str.encode("token"))
 
     # when
     spirited.changeTokenURIBasedOnBtcPrice(0)
 
     # then
-    result = spirited.getTokenURI(0)
-    assert result.replace('\x00', '') == token_uri
+    result = spirited.tokenURI(0)
+    assert result == token_uri
