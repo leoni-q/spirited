@@ -1,3 +1,6 @@
+## About
+Dynamic NFT Application, that allows users to convert pieces of art into dynamic tokens stored on chain
+
 ## Prerequisites
 
 Please install or have installed the following:
