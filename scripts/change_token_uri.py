@@ -3,6 +3,8 @@ import os
 
 from brownie import Spirited, network, accounts, config
 
+token_id = 0
+
 
 def main():
     spirited_contract = Spirited[len(Spirited) - 1]
@@ -10,6 +12,6 @@ def main():
 
     if network.show_active() in ['kovan', 'rinkeby', 'mainnet']:
         dev = accounts.add(os.getenv(config['wallets']['from_key']))
-        spirited_contract.changeTokenURIBasedOnBtcPrice(0, {'from': dev})
+        spirited_contract.changeTokenURIBasedOnBtcPrice(token_id, {'from': dev})
     else:
-        spirited_contract.changeTokenURIBasedOnBtcPrice(0, {'from': accounts[0]})
+        spirited_contract.changeTokenURIBasedOnBtcPrice(token_id, {'from': accounts[0]})
